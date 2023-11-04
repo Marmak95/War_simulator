@@ -7,8 +7,8 @@ import src.units.*;
  */
 
 public class Team {
-	String name;
-	ArrayList<Unit> units;
+	private String name;
+	private ArrayList<Unit> units;
 	
 	public Team(String name, ArrayList<Unit> units) {
 		this.name = name;
@@ -19,4 +19,7 @@ public class Team {
 		return this.units;
 	}
 
+	public String getName() {
+		return this.name;
+	}
 }

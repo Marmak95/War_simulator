@@ -15,7 +15,7 @@ public class Unit {
 	private int attackSpeed; // The speed of performing attacks in milliseconds.
 	private int timeUntilAttack; // The time until the unit will attack.
 
-	public Unit(String name, int hp, int damage, int defense, double accuracy, double evasion, int attackSpeed) {
+	public Unit(String name, int hp, int damage, int defense, double accuracy, double evasion, int attackSpeed, int timeUntilAttack) {
 		this.name = name;
 		this.hp = hp;
 		this.damage = damage;
@@ -23,6 +23,7 @@ public class Unit {
 		this.accuracy = accuracy;
 		this.evasion = evasion;
 		this.attackSpeed = attackSpeed;
+		this.timeUntilAttack = timeUntilAttack;
 	}
 
 	public String getName() {
@@ -55,5 +56,16 @@ public class Unit {
 	
 	public int getTimeUntilAttack() {
 		return this.timeUntilAttack;
+	}
+	
+	public void updateTimeUntilAttack() {
+		if(this.timeUntilAttack <= 0) {
+			this.timeUntilAttack = this.attackSpeed;
+		}
+		this.timeUntilAttack = this.timeUntilAttack - this.attackSpeed;
+	}
+	
+	public void setHealth(int hp) {
+		this.hp = hp;
 	}
 }

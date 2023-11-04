@@ -13,23 +13,24 @@ public class SimulationEngine {
     private Random random;
     private ArrayList<Team> teams;
 
-    public SimulationEngine(long seed, ArrayList<Team> teams2) {
+    public SimulationEngine(long seed, ArrayList<Team> teams) {
         this.seed = seed;
         this.random = new Random(seed);
-        this.teams = teams2;
+        this.teams = teams;
     }
 
     public void update(long elapsedTime) {
         // Update the simulation based on the elapsed time.
-
-        // Simulate unit movements, actions, and interactions.
-        simulateWar(teams, elapsedTime);
-
-        // Determine the winner if needed (e.g., at the end of the simulation).
+    	
+    	// Determine the winner.
         Team winner = determineWinner(teams);
 
-        // Display real-time results or state updates, if desired.
+        // Display real-time winner results.
         displayResults(winner);
+    	
+        // Simulate unit attacks.
+        simulateWar(teams, elapsedTime);
+
     }
 
     public boolean checkWarEnded() {
@@ -40,9 +41,9 @@ public class SimulationEngine {
     	return false;
     }
     
-    public boolean checkAllUnitsDead(Team team) {
+    private boolean checkAllUnitsDead(Team team) {
     	// Check if all the units of a team are dead.
-	    for (Unit unit : team.getUnits()) {
+	    for(Unit unit : team.getUnits()) {
 	        if(unit.getHealth() > 0) {
 	        	return false;
 	        }
@@ -52,24 +53,80 @@ public class SimulationEngine {
     
     public void currentStateStats() {
     	// Print out the current state of the simulation with all the information.
-        
+    	System.out.println("Current state stats:");
+    	for(Team team : teams) {
+    		System.out.println(team.getName() + " | Units left: " + team.getUnits().size());
+    	}
     }
     
     private void simulateWar(ArrayList<Team> teams, long elapsedTime) {
         // Implements the logic to simulate the war, including unit interactions.
         // Includes real-time updates: the time elapsed since the last update.
     	
+    	// All units will attack one time on one of the other teams' units if
+    	// timeUntilAttack is available for the unit.
+    	for(Team team : teams) {
+    		Team attackerTeam = team;
+    		for (Unit unit : team.getUnits()) {
+    			// Select a random target unit from a different team to attack.
+                Team targetTeam;
+                Unit targetUnit = null; // Initialize targetUnit as null.
+
+                do {
+                    targetTeam = teams.get(random.nextInt(teams.size())); // Randomly select a target team.
+                } while (targetTeam == attackerTeam); // Ensure the target team is different.
+
+                ArrayList<Unit> targetUnits = targetTeam.getUnits();
+                targetUnit = targetUnits.get(random.nextInt(targetUnits.size())); // Randomly select a target unit.
+
+                // Attack the targeted unit if the time until attack is less than or equal to 0 milliseconds.
+                if(unit.getTimeUntilAttack() <= 0) {
+                	// Hit or miss the target unit.
+                	if(random.nextDouble() <= unit.getAccuracy()) {
+                		// If the defense is higher than the damage done, then the attack did 0 damage.
+                		if(targetUnit.getDefense() - unit.getDamage() > 0) {
+	                		targetUnit.setHealth(targetUnit.getHealth());
+	                	}
+	                	else {
+	                		targetUnit.setHealth(targetUnit.getHealth() + targetUnit.getDefense() - unit.getDamage());
+	                	}
+                	}
+                }
+                
+                // Check if the target unit died, if so delete it from the target army.
+                if(targetUnit.getHealth() <= 0) {
+                	targetUnits.remove(targetUnit);
+                }
+                
+                unit.updateTimeUntilAttack();
+    	    }
+    	}
     }
 
     private Team determineWinner(ArrayList<Team> teams) {
         // Determine which team won the war based on your simulation results.
         // Factors can be the number of surviving units, strategy, etc.
         // Return the winning team.
-    	return null;
+    	for(Team team : teams) {
+    		if(checkAllUnitsDead(team) == true) {
+    			teams.remove(team);
+    		}
+    	}
+    	if(teams.size() == 1) {
+    		Team winningTeam = teams.get(0);
+    		return winningTeam;
+    	}
+    	else {
+    		return null;
+    	}
     }
 
     private void displayResults(Team winner) {
         // Display the results of the war simulation to the user.
         // Show the winning team, statistics, and any other relevant information.
+    	if(winner != null) {
+    		System.out.println("The winner is: " + winner.getName() + "!");
+    		System.exit(0);
+    	}
     }
 }

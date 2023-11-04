@@ -19,7 +19,7 @@ public class Main {
 			// Create a new instance of Unit for each unit.
 	        Unit unit = new Unit(unitType.getName(), unitType.getHealth(), unitType.getDamage(),
 	                             unitType.getDefense(), unitType.getAccuracy(), unitType.getEvasion(),
-	                             unitType.getAttackSpeed());
+	                             unitType.getAttackSpeed(), unitType.getTimeUntilAttack());
 	        units.add(unit);
 		}
 		return units;
@@ -33,8 +33,8 @@ public class Main {
 		long timeStep = 1000; // 1 second time step (adjust as needed).
 		
 		// Create the units for the simulation.
-		Unit swordsman = new Unit("Swordsman", 100, 12, 5, 0.8, 0.1, 500);
-		Unit ranger = new Unit("Ranger", 90, 13, 3, 0.85, 0.15, 600);
+		Unit swordsman = new Unit("Swordsman", 100, 12, 5, 0.8, 0.1, 500, 0);
+		Unit ranger = new Unit("Ranger", 90, 13, 3, 0.85, 0.15, 600, 0);
 		
 		// Create the army for each team by creating array lists and adding different units.
 		ArrayList<Unit> team1Units = new ArrayList<Unit>();
@@ -46,6 +46,7 @@ public class Main {
 		team2Units = addUnits(team2Units, ranger, 40);
 		
 		// Create the teams for the simulation.
+		// Team 1 will currently always begin the attacks, then team 2 and so on.
 		Team team1 = new Team("Team 1", team1Units);
 		Team team2 = new Team("Team 2", team2Units);
 		
@@ -57,7 +58,6 @@ public class Main {
         
         // Prints to see what happens.
         System.out.println("The simulation starts.");
-        int i = 0;
         
         // Simulation loop.
         while (true) {
@@ -69,7 +69,8 @@ public class Main {
         	// Update the simulation with the elapsed time (e.g., move units, handle interactions).
         	simulation.update(elapsedTime);
 
-        	// Display the simulation state (if needed).
+        	// Display the simulation state.
+        	simulation.currentStateStats();
 
         	// Check for exit conditions (e.g., end simulation after a certain duration).
         	if(simulation.checkWarEnded() == true) {
@@ -87,13 +88,6 @@ public class Main {
         		// Handle any interruption.
         		System.out.println("The simulation was interupted.");
         		System.exit(1);
-        	}
-        	
-        	// Prints to see what happens.
-        	i++;
-        	if(i == 10) {
-        		System.out.println("The simulation ended.");
-        		System.exit(0);
         	}
         }
 	}
