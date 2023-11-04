@@ -1,4 +1,5 @@
 package src.teams;
+import java.util.ArrayList;
 import src.units.*;
 
 /*
@@ -7,11 +8,15 @@ import src.units.*;
 
 public class Team {
 	String name;
-	Unit[] units;
+	ArrayList<Unit> units;
 	
-	public Team(String name, Unit[] units) {
+	public Team(String name, ArrayList<Unit> units) {
 		this.name = name;
 		this.units = units;
+	}
+
+	public ArrayList<Unit> getUnits() {
+		return this.units;
 	}
 
 }
