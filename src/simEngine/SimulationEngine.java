@@ -22,15 +22,14 @@ public class SimulationEngine {
     public void update(long elapsedTime) {
         // Update the simulation based on the elapsed time.
     	
+    	// Simulate unit attacks.
+        simulateWar(teams, elapsedTime);
+        
     	// Determine the winner.
         Team winner = determineWinner(teams);
 
         // Display real-time winner results.
         displayResults(winner);
-    	
-        // Simulate unit attacks.
-        simulateWar(teams, elapsedTime);
-
     }
 
     public boolean checkWarEnded() {
@@ -39,16 +38,6 @@ public class SimulationEngine {
         	return true;
         }
     	return false;
-    }
-    
-    private boolean checkAllUnitsDead(Team team) {
-    	// Check if all the units of a team are dead.
-	    for(Unit unit : team.getUnits()) {
-	        if(unit.getHealth() > 0) {
-	        	return false;
-	        }
-	    }
-	    return true;
     }
     
     public void currentStateStats() {
@@ -70,8 +59,13 @@ public class SimulationEngine {
     		for (Unit unit : team.getUnits()) {
     			// Select a random target unit from a different team to attack.
                 Team targetTeam;
-                Unit targetUnit = null; // Initialize targetUnit as null.
-
+                Unit targetUnit;
+                
+                // Do not attack if there is only one team left.
+                if(teams.size() == 1) {
+        			break;
+        		}
+                
                 do {
                     targetTeam = teams.get(random.nextInt(teams.size())); // Randomly select a target team.
                 } while (targetTeam == attackerTeam); // Ensure the target team is different.
@@ -98,6 +92,11 @@ public class SimulationEngine {
                 	targetUnits.remove(targetUnit);
                 }
                 
+                // Remove the target team if it does not have any more units alive.
+                if(targetTeam.getUnits().size() == 0) {
+                	teams.remove(targetTeam);
+                }
+                
                 unit.updateTimeUntilAttack();
     	    }
     	}
@@ -107,11 +106,6 @@ public class SimulationEngine {
         // Determine which team won the war based on your simulation results.
         // Factors can be the number of surviving units, strategy, etc.
         // Return the winning team.
-    	for(Team team : teams) {
-    		if(checkAllUnitsDead(team) == true) {
-    			teams.remove(team);
-    		}
-    	}
     	if(teams.size() == 1) {
     		Team winningTeam = teams.get(0);
     		return winningTeam;
@@ -126,7 +120,6 @@ public class SimulationEngine {
         // Show the winning team, statistics, and any other relevant information.
     	if(winner != null) {
     		System.out.println("The winner is: " + winner.getName() + "!");
-    		System.exit(0);
     	}
     }
 }

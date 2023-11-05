@@ -40,10 +40,10 @@ public class Main {
 		ArrayList<Unit> team1Units = new ArrayList<Unit>();
 		ArrayList<Unit> team2Units = new ArrayList<Unit>();
 		
-		team1Units = addUnits(team1Units, swordsman, 50);
-		team1Units = addUnits(team1Units, ranger, 30);
-		team2Units = addUnits(team2Units, swordsman, 40);
-		team2Units = addUnits(team2Units, ranger, 40);
+		team1Units = addUnits(team1Units, swordsman, 15);
+		team1Units = addUnits(team1Units, ranger, 5);
+		team2Units = addUnits(team2Units, swordsman, 10);
+		team2Units = addUnits(team2Units, ranger, 10);
 		
 		// Create the teams for the simulation.
 		// Team 1 will currently always begin the attacks, then team 2 and so on.
@@ -68,10 +68,10 @@ public class Main {
         	
         	// Update the simulation with the elapsed time (e.g., move units, handle interactions).
         	simulation.update(elapsedTime);
-
+        	
         	// Display the simulation state.
         	simulation.currentStateStats();
-
+        	
         	// Check for exit conditions (e.g., end simulation after a certain duration).
         	if(simulation.checkWarEnded() == true) {
         		System.out.println("The simulation ended.");
@@ -80,10 +80,8 @@ public class Main {
         	
         	// Sleep to control the real-time pace of the simulation.
         	try {
-        		//Thread.sleep(Math.max(0, timeStep - elapsedTime));
+        		// Run the simulation loop every time step.
         		Thread.sleep(timeStep);
-        		// Prints to see what happens.
-        		System.out.println("newTime: " + newTime + " | elapsedTime: " + elapsedTime + " | currentTime: " + currentTime);
         	} catch (InterruptedException e) {
         		// Handle any interruption.
         		System.out.println("The simulation was interupted.");
