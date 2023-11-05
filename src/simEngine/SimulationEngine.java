@@ -1,5 +1,6 @@
 package src.simEngine;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Random;
 import src.teams.*;
 import src.units.*;
@@ -9,12 +10,10 @@ import src.units.*;
  */
 
 public class SimulationEngine {
-    private long seed;
     private Random random;
     private ArrayList<Team> teams;
 
     public SimulationEngine(long seed, ArrayList<Team> teams) {
-        this.seed = seed;
         this.random = new Random(seed);
         this.teams = teams;
     }
@@ -51,55 +50,59 @@ public class SimulationEngine {
     private void simulateWar(ArrayList<Team> teams, long elapsedTime) {
         // Implements the logic to simulate the war, including unit interactions.
         // Includes real-time updates: the time elapsed since the last update.
-    	
-    	// All units will attack one time on one of the other teams' units if
-    	// timeUntilAttack is available for the unit.
-    	for(Team team : teams) {
-    		Team attackerTeam = team;
-    		for (Unit unit : team.getUnits()) {
-    			// Select a random target unit from a different team to attack.
+
+    	// Create a list to store teams to be removed (avoids the concurrent modification error).
+    	ArrayList<Team> teamsToRemove = new ArrayList<>();
+
+        // All units will attack one time on one of the other teams' units if
+        // timeUntilAttack is available for the unit.
+        for(Team team : teams) {
+            Team attackerTeam = team;
+            for (Unit unit : attackerTeam.getUnits()) {
+                // Select a random target unit from a different team to attack.
                 Team targetTeam;
                 Unit targetUnit;
-                
+
                 // Do not attack if there is only one team left.
-                if(teams.size() == 1) {
-        			break;
-        		}
-                
+                if (teams.size() == 1) {
+                    break;
+                }
+
                 do {
                     targetTeam = teams.get(random.nextInt(teams.size())); // Randomly select a target team.
                 } while (targetTeam == attackerTeam); // Ensure the target team is different.
 
                 ArrayList<Unit> targetUnits = targetTeam.getUnits();
-                targetUnit = targetUnits.get(random.nextInt(targetUnits.size())); // Randomly select a target unit.
-
-                // Attack the targeted unit if the time until attack is less than or equal to 0 milliseconds.
-                if(unit.getTimeUntilAttack() <= 0) {
-                	// Hit or miss the target unit.
-                	if(random.nextDouble() <= unit.getAccuracy()) {
-                		// If the defense is higher than the damage done, then the attack did 0 damage.
-                		if(targetUnit.getDefense() - unit.getDamage() > 0) {
-	                		targetUnit.setHealth(targetUnit.getHealth());
-	                	}
-	                	else {
-	                		targetUnit.setHealth(targetUnit.getHealth() + targetUnit.getDefense() - unit.getDamage());
-	                	}
-                	}
-                }
-                
-                // Check if the target unit died, if so delete it from the target army.
-                if(targetUnit.getHealth() <= 0) {
-                	targetUnits.remove(targetUnit);
+                if (!targetUnits.isEmpty()) {
+                    targetUnit = targetUnits.get(random.nextInt(targetUnits.size())); // Randomly select a target unit.
+                    // Attack the targeted unit if the time until attack is less than or equal to 0 milliseconds.
+	                if (unit.getTimeUntilAttack() <= 0) {
+	                    // Hit or miss the target unit.
+	                    if (random.nextDouble() <= unit.getAccuracy()) {
+	                        // If the defense is higher than or equal to the damage done, then the attack did 0 damage.
+	                        if (unit.getDamage() > targetUnit.getDefense()) {
+	                            targetUnit.setHealth(targetUnit.getHealth() + targetUnit.getDefense() - unit.getDamage());
+	                        }
+	                    }
+	                }
+	
+	                // Check if the target unit died, if so remove it from the target team.
+	                if (targetUnit.getHealth() <= 0) {
+	                    targetUnits.remove(targetUnit);
+	                }
                 }
                 
                 // Remove the target team if it does not have any more units alive.
-                if(targetTeam.getUnits().size() == 0) {
-                	teams.remove(targetTeam);
+                if (targetTeam.getUnits().isEmpty()) {
+                    teamsToRemove.add(targetTeam);
                 }
-                
+
                 unit.updateTimeUntilAttack();
-    	    }
-    	}
+            }
+        }
+        
+        // Remove the teams marked for removal.
+        teams.removeAll(teamsToRemove);
     }
 
     private Team determineWinner(ArrayList<Team> teams) {

@@ -27,7 +27,7 @@ public class Main {
 
 	public static void main(String[] args) {
 		// Define the seed and initialize the simulation time and time step.
-		final long seed = 1234;
+		final long seed = 1234; // The seed will randomize the results, but the results will stay the same for a seed.
 		long startTime = System.currentTimeMillis();
 		long currentTime = startTime;
 		long timeStep = 1000; // 1 second time step (adjust as needed).
@@ -39,19 +39,22 @@ public class Main {
 		// Create the army for each team by creating array lists and adding different units.
 		ArrayList<Unit> team1Units = new ArrayList<Unit>();
 		ArrayList<Unit> team2Units = new ArrayList<Unit>();
+		ArrayList<Unit> team3Units = new ArrayList<Unit>();
 		
-		team1Units = addUnits(team1Units, swordsman, 15);
-		team1Units = addUnits(team1Units, ranger, 5);
-		team2Units = addUnits(team2Units, swordsman, 10);
-		team2Units = addUnits(team2Units, ranger, 10);
+		team1Units = addUnits(team1Units, swordsman, 50);
+		team1Units = addUnits(team1Units, ranger, 30);
+		team2Units = addUnits(team2Units, swordsman, 40);
+		team2Units = addUnits(team2Units, ranger, 40);
+		team3Units = addUnits(team3Units, swordsman, 100);
 		
 		// Create the teams for the simulation.
 		// Team 1 will currently always begin the attacks, then team 2 and so on.
 		Team team1 = new Team("Team 1", team1Units);
 		Team team2 = new Team("Team 2", team2Units);
+		Team team3 = new Team("Team 3", team3Units);
 		
 		// Add all the teams in the war to a list of teams.
-		ArrayList<Team> teams = new ArrayList<Team>(Arrays.asList(team1, team2));
+		ArrayList<Team> teams = new ArrayList<Team>(Arrays.asList(team1, team2, team3));
 
         // Initialize the simulation engine with user-defined parameters.
         SimulationEngine simulation = new SimulationEngine(seed, teams);
@@ -66,7 +69,7 @@ public class Main {
         	long elapsedTime = newTime - currentTime;
         	currentTime = newTime;
         	
-        	// Update the simulation with the elapsed time (e.g., move units, handle interactions).
+        	// Update the simulation with the elapsed time (e.g. attack other teams).
         	simulation.update(elapsedTime);
         	
         	// Display the simulation state.
@@ -74,6 +77,7 @@ public class Main {
         	
         	// Check for exit conditions (e.g., end simulation after a certain duration).
         	if(simulation.checkWarEnded() == true) {
+        		// End the simulation since there was only one team left.
         		System.out.println("The simulation ended.");
         		System.exit(0);
         	}
