@@ -1,6 +1,5 @@
 package src.simEngine;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.Random;
 import src.teams.*;
 import src.units.*;
@@ -77,8 +76,8 @@ public class SimulationEngine {
                     targetUnit = targetUnits.get(random.nextInt(targetUnits.size())); // Randomly select a target unit.
                     // Attack the targeted unit if the time until attack is less than or equal to 0 milliseconds.
 	                if (unit.getTimeUntilAttack() <= 0) {
-	                    // Hit or miss the target unit.
-	                    if (random.nextDouble() <= unit.getAccuracy()) {
+	                    // Hit or miss the target unit based on accuracy and dodging skills.
+	                    if (random.nextDouble() <= unit.getAccuracy() && random.nextDouble() > targetUnit.getEvasion()) {
 	                        // If the defense is higher than or equal to the damage done, then the attack did 0 damage.
 	                        if (unit.getDamage() > targetUnit.getDefense()) {
 	                            targetUnit.setHealth(targetUnit.getHealth() + targetUnit.getDefense() - unit.getDamage());

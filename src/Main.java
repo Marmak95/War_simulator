@@ -27,7 +27,7 @@ public class Main {
 
 	public static void main(String[] args) {
 		// Define the seed and initialize the simulation time and time step.
-		final long seed = 1234; // The seed will randomize the results, but the results will stay the same for a seed.
+		final long seed = 1; // The seed will randomize the results, but the results will stay the same for a seed.
 		long startTime = System.currentTimeMillis();
 		long currentTime = startTime;
 		long timeStep = 1000; // 1 second time step (adjust as needed).
@@ -45,7 +45,7 @@ public class Main {
 		team1Units = addUnits(team1Units, ranger, 30);
 		team2Units = addUnits(team2Units, swordsman, 40);
 		team2Units = addUnits(team2Units, ranger, 40);
-		team3Units = addUnits(team3Units, swordsman, 100);
+		team3Units = addUnits(team3Units, swordsman, 80);
 		
 		// Create the teams for the simulation.
 		// Team 1 will currently always begin the attacks, then team 2 and so on.
@@ -84,7 +84,6 @@ public class Main {
         	
         	// Sleep to control the real-time pace of the simulation.
         	try {
-        		// Run the simulation loop every time step.
         		Thread.sleep(timeStep);
         	} catch (InterruptedException e) {
         		// Handle any interruption.
