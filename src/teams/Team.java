@@ -9,6 +9,7 @@ import src.units.*;
 public class Team {
 	private String name;
 	private ArrayList<Unit> units;
+	private int kills;
 	
 	public Team(String name, ArrayList<Unit> units) {
 		this.name = name;
@@ -21,5 +22,13 @@ public class Team {
 
 	public String getName() {
 		return this.name;
+	}
+	
+	public int getKills() {
+		return this.kills;
+	}
+	
+	public void setKills(int kills) {
+		this.kills = kills;
 	}
 }

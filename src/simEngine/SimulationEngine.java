@@ -42,7 +42,7 @@ public class SimulationEngine {
     	// Print out the current state of the simulation with all the information.
     	System.out.println("Current state stats:");
     	for(Team team : teams) {
-    		System.out.println(team.getName() + " | Units left: " + team.getUnits().size());
+    		System.out.println(team.getName() + " | Units killed: " + team.getKills() + " | Units left: " + team.getUnits().size());
     	}
     }
     
@@ -87,6 +87,7 @@ public class SimulationEngine {
 	
 	                // Check if the target unit died, if so remove it from the target team.
 	                if (targetUnit.getHealth() <= 0) {
+	                	team.setKills(team.getKills() + 1); // Add one kill to the killing team (for statistics).
 	                    targetUnits.remove(targetUnit);
 	                }
                 }
@@ -96,7 +97,7 @@ public class SimulationEngine {
                     teamsToRemove.add(targetTeam);
                 }
 
-                unit.updateTimeUntilAttack();
+                unit.updateTimeUntilAttack(elapsedTime);
             }
         }
         

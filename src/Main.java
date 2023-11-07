@@ -27,14 +27,15 @@ public class Main {
 
 	public static void main(String[] args) {
 		// Define the seed and initialize the simulation time and time step.
-		final long seed = 1; // The seed will randomize the results, but the results will stay the same for a seed.
+		final long seed = 1234; // The seed will randomize the results, but the results will stay the same for a seed.
 		long startTime = System.currentTimeMillis();
 		long currentTime = startTime;
 		long timeStep = 1000; // 1 second time step (adjust as needed).
 		
 		// Create the units for the simulation.
 		Unit swordsman = new Unit("Swordsman", 100, 12, 5, 0.8, 0.1, 500, 0);
-		Unit ranger = new Unit("Ranger", 90, 13, 3, 0.85, 0.15, 600, 0);
+		Unit ranger = new Unit("Ranger", 90, 13, 3, 0.85, 0.25, 600, 0);
+		Unit armouredTroll = new Unit("Armoured troll", 225, 20, 10, 0.70, 0.0, 1800, 0);
 		
 		// Create the army for each team by creating array lists and adding different units.
 		ArrayList<Unit> team1Units = new ArrayList<Unit>();
@@ -45,7 +46,7 @@ public class Main {
 		team1Units = addUnits(team1Units, ranger, 30);
 		team2Units = addUnits(team2Units, swordsman, 40);
 		team2Units = addUnits(team2Units, ranger, 40);
-		team3Units = addUnits(team3Units, swordsman, 80);
+		team3Units = addUnits(team3Units, armouredTroll, 20);
 		
 		// Create the teams for the simulation.
 		// Team 1 will currently always begin the attacks, then team 2 and so on.

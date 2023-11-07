@@ -58,11 +58,11 @@ public class Unit {
 		return this.timeUntilAttack;
 	}
 	
-	public void updateTimeUntilAttack() {
+	public void updateTimeUntilAttack(long elapsedTime) {
 		if(this.timeUntilAttack <= 0) {
 			this.timeUntilAttack = this.attackSpeed;
 		}
-		this.timeUntilAttack = this.timeUntilAttack - this.attackSpeed;
+		this.timeUntilAttack = this.timeUntilAttack - (int) elapsedTime;
 	}
 	
 	public void setHealth(int hp) {
