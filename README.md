@@ -1,9 +1,7 @@
 # War_simulator
 A Java project where the user can simulate a war between different teams with different units.
 The war simulation is free-for-all, meaning a team can attack any other team.
-
-## Real time system
-The simulation updates the simulation every second.
+The simulation updates the simulation every second and runs synronously.
 
 ## Teams
 The teams have the following:
@@ -19,3 +17,6 @@ The units have the following:
 - Evasion
 - Attack speed
 - Time until attack
+
+## How to use
+Run Main.java.
