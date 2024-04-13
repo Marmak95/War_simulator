@@ -19,4 +19,5 @@ The units have the following:
 - Time until attack
 
 ## How to use
-Run Main.java.
+1. Modify the simulation inside Main.java (seed, units and teams etc.).
+2. Run Main.java.

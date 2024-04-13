@@ -83,7 +83,7 @@ public class Main {
         		System.exit(0);
         	}
         	
-        	// Sleep to control the real-time pace of the simulation.
+        	// Sleep to control the pace of the simulation.
         	try {
         		Thread.sleep(timeStep);
         	} catch (InterruptedException e) {
